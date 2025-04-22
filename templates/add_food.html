@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить продукт | {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h4 class="my-2">Добавить новый продукт</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Название продукта</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Калории (ккал)</label>
+                        <input type="number" step="0.1" name="calories" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Белки (г)</label>
+                        <input type="number" step="0.1" name="protein" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Жиры (г)</label>
+                        <input type="number" step="0.1" name="fat" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Углеводы (г)</label>
+                        <input type="number" step="0.1" name="carbs" class="form-control" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Сохранить
+                        </button>
+                        <a href="/" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Назад
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -8,65 +8,82 @@
                 <h4 class="my-2">Ваши продукты</h4>
             </div>
             <div class="card-body">
-                {% if foods %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Продукт</th>
-                                <th>Калории</th>
-                                <th>Белки (г)</th>
-                                <th>Жиры (г)</th>
-                                <th>Углеводы (г)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for food in foods %}
-                            <tr>
-                                <td>{{ food.name }}</td>
-                                <td>{{ food.calories }}</td>
-                                <td>{{ food.protein }}</td>
-                                <td>{{ food.fat }}</td>
-                                <td>{{ food.carbs }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-info">Нет данных. Добавьте первый продукт!</div>
-                {% endif %}
+    
+    {% if foods %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Продукт</th>
+                    <th>Калории</th>
+                    <th>Белки (г)</th>
+                    <th>Жиры (г)</th>
+                    <th>Углеводы (г)</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for food in foods %}
+                <tr id="food-{{ food.id }}">
+                    <td>{{ food.name }}</td>
+                    <td>{{ food.calories }}</td>
+                    <td>{{ food.protein }}</td>
+                    <td>{{ food.fat }}</td>
+                    <td>{{ food.carbs }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm delete-btn" 
+                                data-id="{{ food.id }}">
+                            Удалить
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">Нет данных. Добавьте первый продукт!</div>
+    {% endif %}
 
-                <!-- Карточка с итогами -->
-                <div class="card mt-4 border-primary">
-                    <div class="card-header bg-primary text-white">
-                        Итого за день
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <span class="fw-bold">Калории:</span> {{ total.calories }}
-                            </div>
-                            <div class="col-md-3">
-                                <span class="fw-bold">Белки:</span> {{ total.protein }} г
-                            </div>
-                            <div class="col-md-3">
-                                <span class="fw-bold">Жиры:</span> {{ total.fat }} г
-                            </div>
-                            <div class="col-md-3">
-                                <span class="fw-bold">Углеводы:</span> {{ total.carbs }} г
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <a href="/add" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Добавить продукт
-                    </a>
-                </div>
-            </div>
+    <div class="card mt-4 border-primary">
+        <div class="card-header bg-primary text-white">
+            Итого за день
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                Калории: <span class="fw-bold">{{ total.calories }}</span> |
+                Белки: <span class="fw-bold">{{ total.protein }}</span> |
+                Жиры: <span class="fw-bold">{{ total.fat }}</span> |
+                Углеводы: <span class="fw-bold">{{ total.carbs }}</span>
+            </p>
         </div>
     </div>
+
+    <div class="mt-4">
+        <a href="/add" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Добавить продукт
+        </a>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Удалить этот продукт?')) {
+                fetch(`/delete/${this.dataset.id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`food-${this.dataset.id}`).remove();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

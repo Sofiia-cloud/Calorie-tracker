@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/calorie_tracker/nutrition.db'
@@ -40,7 +41,15 @@ def add_food():
         return redirect('/')
     return render_template('add_food.html')
 
+@app.route('/delete/<int:food_id>', methods=['DELETE'])
+def delete_food(food_id):
+    food = Food.query.get_or_404(food_id)
+    db.session.delete(food)
+    db.session.commit()
+    return jsonify({'success': True})
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
